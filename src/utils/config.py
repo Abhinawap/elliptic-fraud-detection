@@ -60,10 +60,23 @@ RF_182_OPTIMAL_THRESHOLD: float = 0.770  # updated: 186-feature model (+ missing
 # have missing values; 519/42019 licit rows do). Must be captured BEFORE
 # the SimpleImputer step in the preprocessing pipeline.
 STRUCTURAL_MISSING_COLS: list[str] = [
-    "in_txs_degree", "out_txs_degree", "total_BTC", "fees", "size",
-    "num_input_addresses", "num_output_addresses",
-    "in_BTC_min", "in_BTC_max", "in_BTC_mean", "in_BTC_median", "in_BTC_total",
-    "out_BTC_min", "out_BTC_max", "out_BTC_mean", "out_BTC_median", "out_BTC_total",
+    "in_txs_degree",
+    "out_txs_degree",
+    "total_BTC",
+    "fees",
+    "size",
+    "num_input_addresses",
+    "num_output_addresses",
+    "in_BTC_min",
+    "in_BTC_max",
+    "in_BTC_mean",
+    "in_BTC_median",
+    "in_BTC_total",
+    "out_BTC_min",
+    "out_BTC_max",
+    "out_BTC_mean",
+    "out_BTC_median",
+    "out_BTC_total",
 ]
 
 # Contamination ≈ true illicit rate (9.76%) + small margin

@@ -41,7 +41,9 @@ def train_classifier(
         y_pred: Hard predictions on the test set.
         y_proba: Probability scores for the positive class on the test set.
     """
-    logger.info("Training %s on %d samples (%d features)...", model_name, len(X_train), X_train.shape[1])
+    logger.info(
+        "Training %s on %d samples (%d features)...", model_name, len(X_train), X_train.shape[1]
+    )
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
@@ -157,9 +159,7 @@ def compute_shap_values(
         rng = np.random.RandomState(random_state)
         sample_indices = rng.choice(len(X_test), size=sample_size, replace=False)
         X_test_sample = X_test[sample_indices]
-        logger.info(
-            "SHAP computation on %d samples (subsampled from %d)", sample_size, len(X_test)
-        )
+        logger.info("SHAP computation on %d samples (subsampled from %d)", sample_size, len(X_test))
     else:
         X_test_sample = X_test
         logger.info("SHAP computation on all %d test samples", len(X_test))

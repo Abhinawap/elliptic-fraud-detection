@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PowerTransformer
 
-from src.utils.config import EXCLUDE_COLS, RANDOM_STATE, SPLIT_RATIO
+from src.utils.config import EXCLUDE_COLS, SPLIT_RATIO
 
 logger = logging.getLogger(__name__)
 
@@ -110,8 +110,6 @@ def prepare_features_and_labels(
         y = y[~inf_mask]
         time_steps = time_steps[~inf_mask]
 
-    logger.info(
-        "Feature matrix: %d samples × %d features", X.shape[0], X.shape[1]
-    )
+    logger.info("Feature matrix: %d samples × %d features", X.shape[0], X.shape[1])
 
     return X, y, time_steps, feature_cols

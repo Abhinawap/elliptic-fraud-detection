@@ -8,7 +8,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 from src.utils.config import DOCS_DIR, TRAIN_TEST_SPLIT_TIMESTEP
 
@@ -37,7 +36,7 @@ def plot_class_distribution(
     legit_count = int((labeled["class"] == 2).sum())
     imbalance_ratio = legit_count / max(fraud_count, 1)
 
-    fig = plt.figure(figsize=(12, 4))
+    plt.figure(figsize=(12, 4))
     ax1 = plt.subplot(1, 3, 1)
     ax2 = plt.subplot(1, 3, 2)
     ax3 = plt.subplot(1, 3, 3)
@@ -103,9 +102,7 @@ def plot_temporal_patterns(
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
     # Plot 1: Fraud rate over time
-    fraud_rate_by_time = labeled.groupby("Time step").apply(
-        lambda x: (x["class"] == 1).mean()
-    )
+    fraud_rate_by_time = labeled.groupby("Time step").apply(lambda x: (x["class"] == 1).mean())
     axes[0].plot(
         fraud_rate_by_time.index,
         fraud_rate_by_time.values,
@@ -183,9 +180,7 @@ def plot_shap_analysis(
     axes[0].set_yticks(range(len(top_shap)))
     axes[0].set_yticklabels(top_shap["feature"].values, fontsize=10)
     axes[0].set_xlabel("Mean |SHAP Value|", fontsize=11, fontweight="bold")
-    axes[0].set_title(
-        "Top 15 Features by SHAP Importance", fontsize=12, fontweight="bold", pad=10
-    )
+    axes[0].set_title("Top 15 Features by SHAP Importance", fontsize=12, fontweight="bold", pad=10)
     axes[0].invert_yaxis()
     axes[0].grid(True, alpha=0.3, axis="x", linestyle="--")
     axes[0].spines["top"].set_visible(False)
@@ -200,10 +195,24 @@ def plot_shap_analysis(
     shap_neg = (shap_values_fraud[:, top_15_idx] < 0).sum(axis=0)
 
     x = np.arange(15)
-    axes[1].barh(x, shap_pos, color="#d62728", alpha=0.8, label="Positive (→Fraud)",
-                 edgecolor="black", linewidth=0.5)
-    axes[1].barh(x, -shap_neg, color="#2ca02c", alpha=0.8, label="Negative (→Legit)",
-                 edgecolor="black", linewidth=0.5)
+    axes[1].barh(
+        x,
+        shap_pos,
+        color="#d62728",
+        alpha=0.8,
+        label="Positive (→Fraud)",
+        edgecolor="black",
+        linewidth=0.5,
+    )
+    axes[1].barh(
+        x,
+        -shap_neg,
+        color="#2ca02c",
+        alpha=0.8,
+        label="Negative (→Legit)",
+        edgecolor="black",
+        linewidth=0.5,
+    )
     axes[1].set_yticks(x)
     axes[1].set_yticklabels(shap_importance.head(15)["feature"].values, fontsize=10)
     axes[1].set_xlabel("Count of SHAP Values", fontsize=11, fontweight="bold")
@@ -337,7 +346,10 @@ def plot_learning_curve(
     for i, n in enumerate(learning_curve_df["n_features"]):
         axes[0, 1].annotate(
             f"{int(n)}",
-            (learning_curve_df["fraud_recall"].iloc[i], learning_curve_df["fraud_precision"].iloc[i]),
+            (
+                learning_curve_df["fraud_recall"].iloc[i],
+                learning_curve_df["fraud_precision"].iloc[i],
+            ),
             fontsize=8,
         )
     axes[0, 1].set_xlabel("Fraud Recall")
@@ -353,9 +365,7 @@ def plot_learning_curve(
         color="purple",
         linewidth=2,
     )
-    axes[1, 0].axhline(
-        y=rf_baseline_auc, color="green", linestyle="--", label="RF-182", alpha=0.7
-    )
+    axes[1, 0].axhline(y=rf_baseline_auc, color="green", linestyle="--", label="RF-182", alpha=0.7)
     axes[1, 0].set_xlabel("Number of Features")
     axes[1, 0].set_ylabel("ROC-AUC Score")
     axes[1, 0].set_title("XGBoost Learning Curve: ROC-AUC")

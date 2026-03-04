@@ -1,7 +1,6 @@
 """Unit tests for src/models/train.py and src/models/evaluate.py"""
 
 import numpy as np
-import pandas as pd
 import pytest
 from sklearn.ensemble import RandomForestClassifier
 
@@ -39,9 +38,7 @@ class TestTrainClassifier:
 
         X_train, X_test, y_train, y_test = small_train_test
         model = RandomForestClassifier(n_estimators=5, random_state=42)
-        _, y_pred, y_proba = train_classifier(
-            model, X_train, y_train, X_test, y_test, "test_rf"
-        )
+        _, y_pred, y_proba = train_classifier(model, X_train, y_train, X_test, y_test, "test_rf")
         assert len(y_pred) == len(y_test)
         assert len(y_proba) == len(y_test)
 
@@ -60,9 +57,7 @@ class TestTrainClassifier:
 
         X_train, X_test, y_train, y_test = small_train_test
         model = RandomForestClassifier(n_estimators=5, random_state=42)
-        fitted_model, _, _ = train_classifier(
-            model, X_train, y_train, X_test, y_test, "rf"
-        )
+        fitted_model, _, _ = train_classifier(model, X_train, y_train, X_test, y_test, "rf")
         # Should not raise — model must be fitted
         check_is_fitted(fitted_model)
 

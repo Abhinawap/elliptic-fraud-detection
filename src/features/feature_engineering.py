@@ -370,9 +370,7 @@ def add_temporal_features(
 
     train_labeled = labeled_train[labeled_train["class"] != UNKNOWN_LABEL].copy()
     train_labeled["is_illicit"] = (train_labeled["class"] == ILLICIT_LABEL).astype(float)
-    step_fraud_rate = (
-        train_labeled.groupby("Time step")["is_illicit"].mean().sort_index()
-    )
+    step_fraud_rate = train_labeled.groupby("Time step")["is_illicit"].mean().sort_index()
     overall_rate = float(train_labeled["is_illicit"].mean())
 
     # Build rolling 3-step lookup: rate for step t = mean of steps t-3, t-2, t-1
@@ -404,8 +402,8 @@ def add_temporal_features(
 def pseudo_label_unlabeled(
     model: Any,
     X_unlabeled: np.ndarray,
-    thresh_fraud: float = 0.97,  # only label illicit if p >= 0.97 (very tight — avoid FP pseudo-labels)
-    thresh_licit: float = 0.03,  # only label licit if p <= 0.03 (symmetric bound)
+    thresh_fraud: float = 0.97,  # very tight — avoid FP pseudo-labels
+    thresh_licit: float = 0.03,  # symmetric bound
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Score unlabeled transactions and return high-confidence pseudo-labels for self-training.

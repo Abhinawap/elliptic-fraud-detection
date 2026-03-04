@@ -1,8 +1,6 @@
 """Unit tests for src/preprocessing/pipeline.py"""
 
 import numpy as np
-import pandas as pd
-import pytest
 from sklearn.pipeline import Pipeline
 
 
@@ -99,9 +97,7 @@ class TestTemporalTrainTestSplit:
         )
 
         X, y, time_steps, _ = prepare_features_and_labels(synthetic_labeled)
-        X_train, X_test, _, _, _, _ = temporal_train_test_split(
-            X, y, time_steps, split_ratio=0.8
-        )
+        X_train, X_test, _, _, _, _ = temporal_train_test_split(X, y, time_steps, split_ratio=0.8)
         total = len(X_train) + len(X_test)
         assert abs(len(X_train) / total - 0.8) < 0.05
 

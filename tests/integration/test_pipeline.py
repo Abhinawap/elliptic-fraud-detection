@@ -67,7 +67,9 @@ def pipeline_artifacts():
 
     # 7. Evaluate
     metrics_default = evaluate_classifier(y_test_bin, y_pred, y_proba, pos_label=1)
-    optimal_threshold, y_pred_opt, metrics_opt = optimize_threshold(y_test_bin, y_proba, pos_label=1)
+    optimal_threshold, y_pred_opt, metrics_opt = optimize_threshold(
+        y_test_bin, y_proba, pos_label=1
+    )
 
     return {
         "metrics_default": metrics_default,
@@ -108,9 +110,9 @@ class TestPipelineIntegration:
         """Train and test feature arrays must have the same number of columns."""
         n_train_cols = pipeline_artifacts["X_train"].shape[1]
         n_test_cols = pipeline_artifacts["X_test"].shape[1]
-        assert n_train_cols == n_test_cols, (
-            f"Feature count mismatch: train={n_train_cols}, test={n_test_cols}"
-        )
+        assert (
+            n_train_cols == n_test_cols
+        ), f"Feature count mismatch: train={n_train_cols}, test={n_test_cols}"
 
     def test_precision_not_degenerate(self, pipeline_artifacts):
         """Precision must be > 0 (model predicts at least some positives correctly)."""

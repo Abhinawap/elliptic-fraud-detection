@@ -67,9 +67,7 @@ def load_elliptic_data(
         has_graph = True
         logger.info("Loaded %d transaction edges", len(edgelist))
     except FileNotFoundError:
-        logger.warning(
-            "txs_edgelist.csv not found in %s; graph features disabled.", data_dir
-        )
+        logger.warning("txs_edgelist.csv not found in %s; graph features disabled.", data_dir)
         edgelist = None
         has_graph = False
     except pd.errors.ParserError as exc:

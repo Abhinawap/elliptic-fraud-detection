@@ -217,7 +217,9 @@ class TestIsolationForest:
         assert np.isfinite(scores).all()
         assert scores.dtype in [np.float32, np.float64]
 
-    def test_test_scores_use_train_fitted_model(self, small_X_train, small_X_test, fitted_iso_forest):
+    def test_test_scores_use_train_fitted_model(
+        self, small_X_train, small_X_test, fitted_iso_forest
+    ):
         """Verify test scores come from the train-fitted model, not a refit."""
         from src.features.feature_engineering import add_anomaly_score_feature
 
@@ -260,6 +262,7 @@ class TestAddTemporalFeatures:
 
         result = add_temporal_features(synthetic_labeled)
         import numpy as np
+
         np.testing.assert_array_equal(
             result["timestep"].values, synthetic_labeled["Time step"].values.astype(float)
         )
@@ -366,9 +369,7 @@ class TestPseudoLabelUnlabeled:
         from src.features.feature_engineering import pseudo_label_unlabeled
 
         with pytest.raises(ValueError, match="thresh_licit"):
-            pseudo_label_unlabeled(
-                fitted_model, X_unlabeled, thresh_fraud=0.3, thresh_licit=0.5
-            )
+            pseudo_label_unlabeled(fitted_model, X_unlabeled, thresh_fraud=0.3, thresh_licit=0.5)
 
     def test_X_pseudo_has_same_n_columns_as_input(self, fitted_model, X_unlabeled):
         from src.features.feature_engineering import pseudo_label_unlabeled

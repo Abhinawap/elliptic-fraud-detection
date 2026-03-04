@@ -3,7 +3,6 @@ Model evaluation utilities for fraud detection.
 """
 
 import logging
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -53,12 +52,8 @@ def optimize_threshold(
         y_pred_opt: Hard predictions using the optimal threshold.
         metrics_opt: Evaluation metrics dict at the optimal threshold.
     """
-    precision, recall, thresholds = precision_recall_curve(
-        y_true, y_proba, pos_label=pos_label
-    )
-    f1_scores = (
-        2 * (precision[:-1] * recall[:-1]) / (precision[:-1] + recall[:-1] + 1e-10)
-    )
+    precision, recall, thresholds = precision_recall_curve(y_true, y_proba, pos_label=pos_label)
+    f1_scores = 2 * (precision[:-1] * recall[:-1]) / (precision[:-1] + recall[:-1] + 1e-10)
     optimal_idx = int(np.argmax(f1_scores))
     optimal_threshold = float(thresholds[optimal_idx])
 
@@ -105,14 +100,10 @@ def optimize_threshold_cost_sensitive(
     if investigation_cost < 0:
         raise ValueError(f"investigation_cost must be non-negative, got {investigation_cost}")
 
-    precision, recall, thresholds = precision_recall_curve(
-        y_true, y_proba, pos_label=pos_label
-    )
+    precision, recall, thresholds = precision_recall_curve(y_true, y_proba, pos_label=pos_label)
 
     # F1-optimal threshold (same as optimize_threshold — kept for comparison)
-    f1_scores = (
-        2 * (precision[:-1] * recall[:-1]) / (precision[:-1] + recall[:-1] + 1e-10)
-    )
+    f1_scores = 2 * (precision[:-1] * recall[:-1]) / (precision[:-1] + recall[:-1] + 1e-10)
     f1_optimal_threshold = float(thresholds[int(np.argmax(f1_scores))])
 
     # Compute confusion matrix components at each threshold
