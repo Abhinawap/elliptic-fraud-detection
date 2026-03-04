@@ -39,7 +39,7 @@ I chose Elliptic++ specifically because it's one of the few public fraud dataset
 
 ## Dataset
 
-The [Elliptic++ dataset](https://www.kaggle.com/datasets/ellipticco/elliptic-data-set) contains Bitcoin transactions extracted from the blockchain:
+The [Elliptic++ dataset](https://github.com/git-disl/EllipticPlusPlus) contains Bitcoin transactions extracted from the blockchain:
 
 | File | Description | Size |
 |------|-------------|------|
