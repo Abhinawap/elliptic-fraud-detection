@@ -218,13 +218,13 @@ A few approaches that seemed promising but didn't pan out:
 
 ## AI Assistance Disclosure
 
-Parts of this project were developed with Claude (Anthropic) as a coding assistant. The ML design decisions — temporal split rationale, feature engineering choices, threshold optimisation approach, and the "what didn't work" findings — are my own analysis. Claude helped with boilerplate (docstrings, test scaffolding, CI configuration) and was useful for catching bugs during refactoring. All model results are from running the actual training scripts against the Elliptic++ dataset.
+Parts of this project were developed with Claude (Anthropic) as a coding assistant. The ML design decisions such as temporal split rationale, feature engineering choices, threshold optimisation approach, and the "what didn't work" findings are my own analysis. Claude helped with catching bugs during refactoring. All model results are from running the actual training scripts against the Elliptic++ dataset.
 
 ---
 
 ## Future Work: Graph Neural Networks
 
-The Elliptic++ transaction graph is a natural fit for Graph Neural Networks. Bitcoin mixing services and layering patterns create distinctive neighbourhood topologies that tabular models cannot detect.
+The Elliptic++ transaction graph is a natural fit for Graph Neural Networks. Bitcoin mixing services and layering patterns create distinctive neighbourhood topologies that tabular models cannot detect. Furthermore, XGBoost treats each transaction independently, whereas GraphSAGE or GAT would aggregate 2–3 hop neighbourhood signals into each node's embedding before classification. The txs_edgelist.csv already provides 234,355 directed edges, so the graph is ready to build.
 
 **Planned architecture:** GraphSAGE or Graph Attention Network (GAT) operating on temporal graph snapshots.
 
