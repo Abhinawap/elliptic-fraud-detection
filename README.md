@@ -39,7 +39,9 @@ I chose Elliptic++ specifically because it's one of the few public fraud dataset
 
 ## Dataset
 
-The [Elliptic++ dataset](https://github.com/git-disl/EllipticPlusPlus) contains Bitcoin transactions extracted from the blockchain:
+The [Elliptic++ dataset](https://github.com/git-disl/EllipticPlusPlus) was introduced by Elmougy & Liu (KDD '23) and contains Bitcoin transactions extracted from the blockchain:
+
+> Youssef Elmougy and Ling Liu. 2023. Demystifying Fraudulent Transactions and Illicit Nodes in the Bitcoin Network for Financial Forensics. In *Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining* (KDD '23). https://doi.org/10.1145/3580305.3599803
 
 | File | Description | Size |
 |------|-------------|------|
@@ -224,9 +226,9 @@ Parts of this project were developed with Claude (Anthropic) as a coding assista
 
 ## Future Work: Graph Neural Networks
 
-The Elliptic++ transaction graph is a natural fit for Graph Neural Networks. Bitcoin mixing services and layering patterns create distinctive neighbourhood topologies that tabular models cannot detect. Furthermore, XGBoost treats each transaction independently, whereas GraphSAGE or GAT would aggregate 2–3 hop neighbourhood signals into each node's embedding before classification. The txs_edgelist.csv already provides 234,355 directed edges, so the graph is ready to build.
+XGBoost treats each transaction independently — it can't see that a transaction at timestep 45 shares edges with a flagged fraud at timestep 43. Bitcoin mixing and layering patterns leave neighbourhood-level signatures that tabular models miss by design. GraphSAGE or GAT would aggregate 2–3 hop signals before classifying each node. The txs_edgelist.csv already has 234,355 directed edges.
 
-**Planned architecture:** GraphSAGE or Graph Attention Network (GAT) operating on temporal graph snapshots.
+Planned architecture: GraphSAGE or Graph Attention Network (GAT) on temporal graph snapshots.
 
 ```
 Nodes:  203,769 transactions (186-dimensional feature vectors)

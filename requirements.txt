@@ -31,3 +31,6 @@ shap
 
 # Missing data visualization
 missingno>=0.5.2
+
+# Statistical modeling
+statsmodels>=0.14.0
