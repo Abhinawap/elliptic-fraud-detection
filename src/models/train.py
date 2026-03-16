@@ -77,7 +77,10 @@ def train_random_forest_with_gini(
     rf.fit(X_train, y_train)
 
     y_pred = rf.predict(X_test)
-    y_proba = rf.predict_proba(X_test)[:, 0]
+    # Use classes_ to find the fraud (illicit, label=1) column; sklearn orders
+    # classes by value so for {1,2} labels the fraud column is index 0, not 1.
+    fraud_idx = list(rf.classes_).index(1) if 1 in rf.classes_ else 0
+    y_proba = rf.predict_proba(X_test)[:, fraud_idx]
 
     gini_importance = pd.DataFrame(
         {"feature": feature_cols, "gini_importance": rf.feature_importances_}
@@ -166,10 +169,19 @@ def compute_shap_values(
 
     shap_values = explainer.shap_values(X_test_sample)
 
-    # Extract fraud class SHAP values
-    if len(shap_values.shape) == 3:
-        shap_values_fraud = shap_values[:, :, 0]
+    # Extract fraud class SHAP values.
+    # TreeExplainer returns a list of arrays (one per class) for RF, or a single
+    # 2D array for XGBoost binary classifiers. The fraud class has label 1.
+    if hasattr(model, "classes_") and 1 in model.classes_:
+        fraud_idx = list(model.classes_).index(1)
     else:
+        fraud_idx = 0
+    if isinstance(shap_values, list):
+        shap_values_fraud = shap_values[fraud_idx]
+    elif len(shap_values.shape) == 3:
+        shap_values_fraud = shap_values[:, :, fraud_idx]
+    else:
+        # XGBoost binary: single 2D array already represents the positive class
         shap_values_fraud = shap_values
 
     mean_abs_shap = np.abs(shap_values_fraud).mean(axis=0)

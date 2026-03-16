@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PowerTransformer
 
-from src.utils.config import EXCLUDE_COLS, SPLIT_RATIO
+from src.utils.config import EXCLUDE_COLS, SPLIT_RATIO, TRAIN_TEST_SPLIT_TIMESTEP
 
 logger = logging.getLogger(__name__)
 
@@ -33,32 +33,36 @@ def temporal_train_test_split(
     X: pd.DataFrame,
     y: pd.Series,
     time_steps: pd.Series,
-    split_ratio: float = SPLIT_RATIO,
+    split_ratio: float = SPLIT_RATIO,  # retained for API compatibility; not used
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series, pd.Series]:
     """Split features and labels temporally (oldest rows go to train).
+
+    The split boundary is the fixed timestep TRAIN_TEST_SPLIT_TIMESTEP (41),
+    so train = timesteps 1–41 and test = timesteps 42–49, matching the documented
+    80/20 split. split_ratio is retained for API compatibility but is not used.
 
     Args:
         X: Feature DataFrame.
         y: Label Series.
         time_steps: Time step Series (must be aligned with X and y by index).
-        split_ratio: Fraction of data to use for training (default: 0.8).
+        split_ratio: Unused; boundary is determined by TRAIN_TEST_SPLIT_TIMESTEP.
 
     Returns:
         X_train, X_test, y_train, y_test, time_train, time_test
     """
-    sorted_indices = time_steps.sort_values().index
+    sorted_indices = time_steps.sort_values(kind="stable").index
     X_sorted = X.loc[sorted_indices]
     y_sorted = y.loc[sorted_indices]
     time_steps_sorted = time_steps.loc[sorted_indices]
 
-    split_idx = int(len(X_sorted) * split_ratio)
+    split_mask = time_steps_sorted <= TRAIN_TEST_SPLIT_TIMESTEP
 
-    X_train = X_sorted.iloc[:split_idx]
-    X_test = X_sorted.iloc[split_idx:]
-    y_train = y_sorted.iloc[:split_idx]
-    y_test = y_sorted.iloc[split_idx:]
-    time_train = time_steps_sorted.iloc[:split_idx]
-    time_test = time_steps_sorted.iloc[split_idx:]
+    X_train = X_sorted[split_mask]
+    X_test = X_sorted[~split_mask]
+    y_train = y_sorted[split_mask]
+    y_test = y_sorted[~split_mask]
+    time_train = time_steps_sorted[split_mask]
+    time_test = time_steps_sorted[~split_mask]
 
     logger.info(
         "Temporal split: %d train (timesteps %d–%d) / %d test (timesteps %d–%d)",

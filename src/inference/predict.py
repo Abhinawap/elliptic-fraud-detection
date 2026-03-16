@@ -52,7 +52,15 @@ def predict_fraud_probability(
     """
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba(X)
-        return proba[:, 1] if proba.shape[1] == 2 else proba[:, 0]
+        if proba.shape[1] == 2:
+            # Determine which column holds P(fraud). sklearn orders classes by value,
+            # so an RF trained on {1,2} has classes_=[1,2] and fraud is at index 0.
+            if hasattr(model, "classes_") and 1 in model.classes_:
+                fraud_idx = list(model.classes_).index(1)
+            else:
+                fraud_idx = 1
+            return proba[:, fraud_idx]
+        return proba[:, 0]
     logger.warning("Model lacks predict_proba; falling back to predict()")
     return model.predict(X).astype(float)
 
