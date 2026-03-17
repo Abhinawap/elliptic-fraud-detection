@@ -10,14 +10,16 @@ def synthetic_features() -> pd.DataFrame:
     """
     Minimal synthetic features DataFrame mimicking txs_features.csv.
 
-    200 transactions × 10 numeric features, plus txId and Time step columns.
+    245 transactions × 10 numeric features, plus txId and Time step columns.
+    Spans timesteps 1–49 (5 tx each) so the fixed split boundary at timestep 41
+    produces a non-empty test set (timesteps 42–49).
     Uses a fixed random seed so results are deterministic across runs.
     """
     rng = np.random.RandomState(42)
-    n = 200
+    n = 245
     data: dict = {
         "txId": np.arange(1, n + 1),
-        "Time step": np.repeat(np.arange(1, 21), 10),  # 20 timesteps, 10 tx each
+        "Time step": np.repeat(np.arange(1, 50), 5),
     }
     for i in range(1, 11):
         data[f"feature_{i}"] = rng.randn(n).astype(np.float32)
